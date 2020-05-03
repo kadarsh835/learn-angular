@@ -1,0 +1,47 @@
+<!-- ngIf in this div -->
+<div class="container"
+    fxLayout="row"
+    fxLayout.sm="column"
+    fxLayout.xs="column"
+    fxLayoutAlign.gt-md="space-around center"
+    fxLayoutGap="10px" 
+    fxLayoutGap.xs="0" *ngIf="dish">
+
+    <!-- ngIf for the outer div automatically implements ngIf for this div -->
+  <div fxFlex="40">
+      <!-- Mat Card starts here -->
+      <mat-card>
+          <mat-card-header>
+              <mat-card-title>{{dish.name | uppercase}}</mat-card-title>
+          </mat-card-header>
+        <img mat-card-image src={{dish.image}} alt={{dish.name}}>
+        <mat-card-content>
+            <p>{{dish.description}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>LIKE</button>
+          <button mat-button>SHARE</button>
+        </mat-card-actions>
+      </mat-card>
+      <!-- Mat Card ends -->
+  </div>
+
+    <!-- ngIf for the outer div automatically implements ngIf for this div -->
+  <div fxFlex="40">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title style="font-size: 30px;">Comments</mat-card-title>
+        </mat-card-header>
+        <!-- Mat List Used here -->
+        <mat-list>
+            <mat-list-item *ngFor="let comment of dish.comments">
+                <div mat-line>{{comment.comment}}</div>
+                <div mat-line>{{comment.rating}} Stars</div>
+                <div mat-line>-- {{comment.author}} {{comment.date | date}}</div>
+            </mat-list-item>
+        </mat-list>
+        <!-- Mat List ends -->
+    </mat-card>
+  </div>
+
+</div>
