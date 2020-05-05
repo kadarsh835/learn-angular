@@ -12,4 +12,5 @@ export const routes: Routes=[
     {path: 'menu', component: MenuComponent},
     {path: 'dishdetail/:id', component: DishDetailComponent},
     {path: 'contact', component: ContactComponent},
+    {path: 'about', component: AboutComponent},
 ]
