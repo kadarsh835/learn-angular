@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Dish } from '../shared/dish';
 import { DishService } from '../services/dish.service';
 
 import { switchMap } from 'rxjs/operators';
+
+// Comment Form
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Comment } from '../shared/comment';
 
 @Component({
   selector: 'app-dish-detail',
@@ -18,9 +22,59 @@ export class DishDetailComponent implements OnInit {
   prev: string;
   next: string;
 
+  // Comment Form
+  commentForm: FormGroup;
+  comment: Comment;
+  date: string;
+  
+  @ViewChild('cForm') commentFormDirective;
+
+  // Mat Slider
+  autoTicks = false;
+  disabled = false;
+  invert = false;
+  max = 5;
+  min = 1;
+  showTicks = true;
+  step = 1;
+  thumbLabel = true;
+  rating = 5;
+  vertical = false;
+  tickInterval = 1;
+
+  getSliderTickInterval(): number | 'auto' {
+    if (this.showTicks) {
+      return this.autoTicks ? 'auto' : this.tickInterval;
+    }
+
+    return 0;
+  }
+
+  formErrors={
+    'author': '',
+    'rating': '',
+    'comment': '',
+  }
+
+  validationMessages={
+    'author':{
+      'required': 'Author Name is required',
+      'minlength': 'Author Name must be atleast 2 characters long',
+      'maxlength': 'Author Name should not exceed 25 characters in length',
+    },
+    'rating':{
+    },
+    'comment':{
+      'required': 'Comment shouldd not be empty.',
+    }
+  }
+
   constructor(private dishService: DishService,
                 private route: ActivatedRoute,
-                private location: Location) { }
+                private location: Location,
+                private fb: FormBuilder) {
+    this.createForm();
+  }
 
   ngOnInit(): void {
     this.dishService.getDishIds()
@@ -41,6 +95,53 @@ export class DishDetailComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  createForm(){
+    this.commentForm=this.fb.group({
+      author: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(25),]],
+      rating: [this.rating],
+      comment: ['', [Validators.required,]],
+      date: [''],
+    })
+    this.commentForm.valueChanges
+      .subscribe(data=> this.onValueChanged(data));
+    
+    this.onValueChanged();
+  }
+
+  onValueChanged(data?: any){
+    if(!this.commentForm){return ;}
+    const form= this.commentForm;
+    for (const field in this.formErrors){
+      if(this.formErrors.hasOwnProperty(field)){
+        this.formErrors[field]='';  //clear previous error messages, if any
+        const control= form.get(field)
+        if (control && control.dirty && !control.valid){
+          const messages= this.validationMessages[field];
+          for(const key in control.errors){
+            if(control.errors.hasOwnProperty(key)){
+              this.formErrors[field] += messages[key] + ' ';
+            }
+          }
+        }
+      }
+    }
+  }
+
+  onSubmit(){
+    this.comment= this.commentForm.value;
+    this.comment['date']= (new Date()).toDateString();
+    this.dish.comments.push(this.comment);
+    console.log(this.dish);
+    console.log(this.rating)
+    this.commentForm.reset({
+      author: [''],
+      ratings: [this.max],
+      comment: [''],
+      date:[''],
+    });
+    this.commentFormDirective.resetForm({rating:this.max});
   }
 
 }

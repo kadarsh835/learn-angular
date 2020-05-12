@@ -1,3 +1,27 @@
+$background-dark: #512DA8;
+
 .comments{
     font-size: 50;
 }
+
+.full-width{
+    width: 95%;
+}
+
+.half-width{
+    width: 45%;
+}
+
+.tp-margin {
+    margin: 30px;
+}
+
+::ng-deep .mat-accent .mat-slider-thumb {
+    background-color: #9575CD;
+} 
+::ng-deep .mat-accent .mat-slider-thumb-label {
+    background-color: #9575CD;
+} 
+::ng-deep .mat-accent .mat-slider-track-fill {
+    background-color: red;
+} 
