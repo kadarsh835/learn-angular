@@ -18,6 +18,7 @@ import { Comment } from '../shared/comment';
 export class DishDetailComponent implements OnInit {
 
   dish: Dish;
+  errMess: string;
   dishIds: Array<string>;
   prev: string;
   next: string;
@@ -85,7 +86,8 @@ export class DishDetailComponent implements OnInit {
         .subscribe((dish)=> {
             this.dish= dish;
             this.setPrevNext(this.dish.id);
-        });
+          },
+          errmess=> this.errMess=<any>errmess);
   }
 
   setPrevNext(dishId: string){

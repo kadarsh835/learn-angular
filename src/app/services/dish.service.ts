@@ -6,35 +6,41 @@ import { baseURL } from '../shared/baseURL';
 
 //RxJS
 import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { delay, map, catchError } from 'rxjs/operators';
+import { ProcessHttpMsgService } from '../services/process-http-msg.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DishService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private processHTTPMsgService: ProcessHttpMsgService) { }
 
   getDishes(): Observable<Array<Dish>> {
     // Using Observables RxJS
-    return this.http.get<Array<Dish>>(baseURL+'dishes');
+    return this.http.get<Array<Dish>>(baseURL+'dishes')
+      .pipe(catchError(this.processHTTPMsgService.handleError));
     // return of(DISHES).pipe(delay(2000));
   }
 
   getDish(id: string): Observable<Dish>{
     // Using Observables RxJS
-    return this.http.get<Dish>(baseURL+ 'dishes/'+ id);
+    return this.http.get<Dish>(baseURL+ 'dishes/'+ id)
+      .pipe(catchError(this.processHTTPMsgService.handleError));
     // return of(DISHES.filter((dish)=>(dish.id===id))[0]).pipe(delay(2000));
   }
   
   getFeaturedDish(): Observable<Dish>{
     // Using Observables RxJS
     return this.http.get<Dish[]>(baseURL+ 'dishes?featured=true')
-      .pipe(map(dishes => dishes[0]));
+      .pipe(map(dishes => dishes[0]))
+      .pipe(catchError(this.processHTTPMsgService.handleError));
     // return of(DISHES.filter((dish)=>dish.featured)[0]).pipe(delay(2000));
   }
 
   getDishIds(): Observable<Array<string> | any>{
     return this.getDishes().pipe(map(dishes => dishes.map(dish=> dish.id)))
+      .pipe(catchError(error=> error));
   }
 }
