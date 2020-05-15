@@ -8,7 +8,7 @@
     fxLayoutGap.xs="0" *ngIf="dish">
 
     <!-- ngIf for the outer div automatically implements ngIf for this div -->
-  <div fxFlex="40">
+  <div fxFlex="40" [@visibility]= "visibility">
       <!-- Mat Card starts here -->
       <mat-card>
           <mat-card-header>
@@ -35,7 +35,7 @@
   </div>
 
     <!-- ngIf for the outer div automatically implements ngIf for this div -->
-  <div fxFlex="40">
+  <div fxFlex="40" [@visibility]="visibility">
     <div class="container"
         fxLayout="column"
         fxLayout.sm="column"
